@@ -14,6 +14,7 @@ import org.apache.batik.util.XMLResourceDescriptor;
 import org.w3c.dom.svg.SVGDocument;
 import ru.vsu.cs.course1.graph.Graph;
 import ru.vsu.cs.course1.graph.GraphUtils;
+import ru.vsu.cs.course1.graph.Solution;
 import ru.vsu.cs.util.SwingUtils;
 
 import javax.swing.*;
@@ -67,6 +68,7 @@ public class GraphDemoFrame extends JFrame {
     private JPanel panelEnemyGraphContainer;
     private JButton bookBtn;
     private JTextField peopleWithBookInput;
+    private JPanel solutionGraphPaintContainer;
 
     private JFileChooser fileChooserTxtOpen;
     private JFileChooser fileChooserDotOpen;
@@ -80,6 +82,7 @@ public class GraphDemoFrame extends JFrame {
     private SvgPanel friednlyPanelGraphPainter;
     private SvgPanel panelGraphvizPainter;
     private SvgPanel enemyPanelGraphPainter;
+    private SvgPanel solutionPanelGraphPainter;
 
 
     private static class SvgPanel extends JPanel {
@@ -166,7 +169,10 @@ public class GraphDemoFrame extends JFrame {
         panelGraphPainterContainer.setLayout(new BorderLayout());
         friednlyPanelGraphPainter = new SvgPanel();
         enemyPanelGraphPainter = new SvgPanel();
+        solutionPanelGraphPainter = new SvgPanel();
         panelGraphPainterContainer.add(new JScrollPane(friednlyPanelGraphPainter));
+        solutionGraphPaintContainer.setLayout(new BorderLayout());
+        solutionGraphPaintContainer.add(new JScrollPane(solutionPanelGraphPainter));
         panelEnemyGraphContainer.setLayout(new BorderLayout());
         panelEnemyGraphContainer.add(new JScrollPane(enemyPanelGraphPainter));
 
@@ -389,16 +395,17 @@ public class GraphDemoFrame extends JFrame {
                 }
             }
         });
-        bookBtn.addActionListener(new ActionListener(){
+        bookBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                    try {
-                        int bookOwner = Integer.parseInt(peopleWithBookInput.getText());
-                    }
-                    catch (Exception ex)
-                    {
-                        SwingUtils.showErrorMessageBox(ex);
-                    }
+                try {
+                    int bookOwner = Integer.parseInt(peopleWithBookInput.getText());
+                    Graph goodGraph = Solution.pathForBook(bookOwner, friendlyGraph);
+                    solutionPanelGraphPainter.paint(dotToSvg(goodGraph.toDot()));
+                    //    friednlyPanelGraphPainter.paint(dotToSvg(goodGraph.toDot()));
+                } catch (Exception ex) {
+                    SwingUtils.showErrorMessageBox(ex);
+                }
             }
         });
     }
@@ -466,8 +473,9 @@ public class GraphDemoFrame extends JFrame {
         panelGraphTab.add(splitPaneGraphTab1, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
         final JScrollPane scrollPane1 = new JScrollPane();
         splitPaneGraphTab1.setRightComponent(scrollPane1);
-        textAreaSystemOut = new JTextArea();
-        scrollPane1.setViewportView(textAreaSystemOut);
+        solutionGraphPaintContainer = new JPanel();
+        solutionGraphPaintContainer.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        scrollPane1.setViewportView(solutionGraphPaintContainer);
         splitPaneGraphTab2 = new JSplitPane();
         splitPaneGraphTab2.setResizeWeight(0.0);
         splitPaneGraphTab1.setLeftComponent(splitPaneGraphTab2);
