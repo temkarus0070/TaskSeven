@@ -1,75 +1,88 @@
 package ru.vsu.cs.course1.graph;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class Solution {
 
     private static boolean[] used;
-    private static Integer[]parents;
+    private static boolean[] notUsed;
+    private static List<Integer>[]parents;
 
-    public static Graph pathForBook(int bookOwner, Graph friendlyGraph){
+
+
+    public static Graph pathForBook(int bookOwner, Graph friendlyGraph) {
         Graph newGraph = new AdjMatrixGraph();
-        Graph newGraph1 = new AdjListsGraph();
-        used = new boolean[friendlyGraph.vertexCount()];
-        parents = new Integer[friendlyGraph.vertexCount()];
-        CycleData data = hasCycle(friendlyGraph,bookOwner,-1,bookOwner);
-        if(data.hasCycle)
-        {
-            for(int i=parents.length-1;i>=0;i--){
-                if(parents[i]!=null)
-                    newGraph.addAdge(i,parents[i]);
-            }
-            newGraph.addAdge(data.nodeNum,bookOwner);
-            return newGraph;
+        boolean[] visited = new boolean[friendlyGraph.vertexCount()];
+        ArrayList<Integer> path = new ArrayList<>();
+        getHamilton(friendlyGraph,bookOwner,visited,path);
+        for(int i=0;i<path.size()-1;i++) {
+            int v = path.get(i);
+            int u = path.get(i+1);
+            newGraph.addAdge(v,u);
         }
-        return null;
+        newGraph.addAdge(path.get(path.size()-1),bookOwner);
+
+
+
+
+        return newGraph;
     }
 
-    private static CycleData hasCycle(Graph graph,int v,int p, int owner){
-        used[v] = true;
-        for(int u:graph.adjacencies(v)){
-            if(!used[u]){
-                parents[u] = v;
-                hasCycle(graph,u,v,owner);
-                /*CycleData data =
-                if (data.hasCycle && checkParents(parents,graph.vertexCount()) && checkBookOwner(graph.adjacencies(data.nodeNum),owner))
-                    return data;*/
-            }
-            else if(u!=p){
-                if(checkParents(parents,graph.vertexCount()) && checkBookOwner(graph.adjacencies(u),owner)) {
-                    System.out.println(String.format("graph has cycle %d  %d %d", u ,p,v));
-                    return new CycleData(true,u);
-                }
-            }
-        }
-        return new CycleData(false,0);
 
-    }
-
-    private static boolean checkParents(Integer[] array,int countNodes){
-        int count = 0;
-        for(Integer element:array){
-            if(element != null)
-                count++;
-        }
-        if(countNodes - 1 == count ){
-            return true;
-        }
-        else
-            return false;
-    }
-
-    private static boolean checkBookOwner(Iterable<Integer> vertes,int n){
-        for(Iterator iterator = vertes.iterator();iterator.hasNext();)
-        {
-            Integer node = (Integer)iterator.next();
-            if(node.equals(n))
+    private static boolean getHamilton(Graph graph, int v, boolean[] visited,ArrayList<Integer> path){
+        path.add(v);
+        if(path.size()== graph.vertexCount()) {
+            if (hasEdge(path.get(0), path.get(path.size() - 1), graph))
                 return true;
+            else {
+                path.remove(path.size() - 1);
+                return false;
+            }
+        }
+            visited[v] = true;
+            for(int i=0;i<graph.vertexCount();i++){
+                if(hasEdge(v,i,graph) && !visited[i])
+                    if(getHamilton(graph,i,visited,path))
+                        return true;
 
+            }
+            visited[v]=false;
+            path.remove(path.size()-1);
+            return false;
+        }
+
+
+    private static void getPath(Stack<Integer> stack,int v, Graph graph){
+        for(int i=0;i<graph.vertexCount();i++){
+            if(hasEdge(v,i,graph)){
+                graph.removeAdge(v,i);
+                getPath(stack,i,graph);
+            }
+        }
+
+        stack.push(v);
+    }
+
+    private static boolean hasEdge(int v,int u,Graph graph){
+        for(Iterator<Integer> iterator = graph.adjacencies(v).iterator();iterator.hasNext();){
+            int obj = iterator.next();
+            if(obj == u)
+                return true;
         }
         return false;
+    }
+
+    private static Integer intersection(Graph graph, int v){
+        Integer num = null;
+        for(Iterator<Integer> iter = graph.adjacencies(v).iterator();iter.hasNext();)
+        {
+            int n = iter.next();
+            if(notUsed[n])
+            {
+                num = n;
+                return num;
+            }
+        }
+        return num;
     }
 }
