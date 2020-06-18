@@ -1,5 +1,6 @@
 package ru.vsu.cs.course1.graph;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Solution {
@@ -21,12 +22,9 @@ public class Solution {
             newGraph.addAdge(v,u);
         }
         newGraph.addAdge(path.get(path.size()-1),bookOwner);
-
-
-
-
         return newGraph;
     }
+
 
 
     private static boolean getHamilton(Graph graph, int v, boolean[] visited,ArrayList<Integer> path){
@@ -39,29 +37,19 @@ public class Solution {
                 return false;
             }
         }
-            visited[v] = true;
-            for(int i=0;i<graph.vertexCount();i++){
-                if(hasEdge(v,i,graph) && !visited[i])
-                    if(getHamilton(graph,i,visited,path))
-                        return true;
-
-            }
-            visited[v]=false;
-            path.remove(path.size()-1);
-            return false;
-        }
-
-
-    private static void getPath(Stack<Integer> stack,int v, Graph graph){
+        visited[v] = true;
         for(int i=0;i<graph.vertexCount();i++){
-            if(hasEdge(v,i,graph)){
-                graph.removeAdge(v,i);
-                getPath(stack,i,graph);
-            }
-        }
+            if(hasEdge(v,i,graph) && !visited[i])
+                if(getHamilton(graph,i,visited,path))
+                    return true;
 
-        stack.push(v);
+        }
+        visited[v]=false;
+        path.remove(path.size()-1);
+        return false;
     }
+
+
 
     private static boolean hasEdge(int v,int u,Graph graph){
         for(Iterator<Integer> iterator = graph.adjacencies(v).iterator();iterator.hasNext();){
@@ -72,17 +60,39 @@ public class Solution {
         return false;
     }
 
-    private static Integer intersection(Graph graph, int v){
-        Integer num = null;
-        for(Iterator<Integer> iter = graph.adjacencies(v).iterator();iter.hasNext();)
-        {
-            int n = iter.next();
-            if(notUsed[n])
-            {
-                num = n;
-                return num;
+    public static Graph groupingWithEnemy(Graph enemyGraph, int s,int p){
+        Graph newGraph = new AdjMatrixGraph();
+        Graph copyGraph = copyGraph(enemyGraph);
+        ArrayList<Integer> list = new ArrayList<>();
+        int[] enemyCount = new int[enemyGraph.vertexCount()];
+        HashMap<Integer,ArrayList<Integer>> vertex= new HashMap<>();
+        for(int i =0;i<enemyGraph.vertexCount();i++)
+            list.add(i);
+
+
+        for(int i=0;i<s;i++){
+            vertex.put(i,new ArrayList<>());
+        }
+
+        while (list.size()>0){
+            int v = list.get(0);
+           // newGraph.enemyGraph.adjacencies(v).iterator().next()
+        }
+        return null;
+    }
+
+    public static Graph copyGraph(Graph graph){
+        Graph newGraph = new AdjMatrixGraph();
+        for(int i=0;i<graph.vertexCount();i++){
+            for(Iterator<Integer> iterator =  graph.adjacencies(i).iterator();iterator.hasNext();){
+                newGraph.addAdge(i,iterator.next());
             }
         }
-        return num;
+        return newGraph;
     }
+
+
+
+
+
 }

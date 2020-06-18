@@ -69,6 +69,9 @@ public class GraphDemoFrame extends JFrame {
     private JButton bookBtn;
     private JTextField peopleWithBookInput;
     private JPanel solutionGraphPaintContainer;
+    private JTextField groupCountTextField;
+    private JTextField enemyCountTextField;
+    private JButton groupingWithEnemyBtn;
 
     private JFileChooser fileChooserTxtOpen;
     private JFileChooser fileChooserDotOpen;
@@ -408,6 +411,19 @@ public class GraphDemoFrame extends JFrame {
                 }
             }
         });
+        groupingWithEnemyBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    int groupCount = Integer.parseInt(groupCountTextField.getText());
+                    int enemyCount = Integer.parseInt(enemyCountTextField.getText());
+                    Graph goodGraph = Solution.groupingWithEnemy(enemyGraph,groupCount,enemyCount);
+                    solutionPanelGraphPainter.paint(dotToSvg(goodGraph.toDot()));
+                } catch (Exception ex) {
+                    SwingUtils.showErrorMessageBox(ex);
+                }
+            }
+        });
     }
 
     /**
@@ -485,7 +501,7 @@ public class GraphDemoFrame extends JFrame {
         final JScrollPane scrollPane2 = new JScrollPane();
         panel1.add(scrollPane2, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         textAreaGraphFile = new JTextArea();
-        textAreaGraphFile.setText("13\n13\n0 5\n4 3\n0 1\n9 12\n6 4\n5 4\n0 2\n11 12\n9 10\n0 6\n7 8\n9 11\n5 3\n");
+        textAreaGraphFile.setText("6\n10\n0 1\n0 3\n0 2\n1 2\n1 4\n2 5\n5 4\n3 4\n4 1\n3 5");
         scrollPane2.setViewportView(textAreaGraphFile);
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
@@ -557,6 +573,7 @@ public class GraphDemoFrame extends JFrame {
         peopleWithBookInput = new JTextField();
         panel4.add(peopleWithBookInput, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         textAreaEnemyGraph = new JTextArea();
+        textAreaEnemyGraph.setText("6\n10\n0 1\n0 3\n0 2\n1 2\n1 4\n2 5\n5 4\n3 4\n4 1\n3 5");
         panel1.add(textAreaEnemyGraph, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
         final JLabel label3 = new JLabel();
         label3.setText("Граф врагов");
