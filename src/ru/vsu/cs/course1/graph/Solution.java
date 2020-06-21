@@ -227,7 +227,7 @@ public class Solution {
             LinkedList<Integer> usedList = (LinkedList<Integer>) linkedList.clone();
             while (banned.size()!=s && usedList.size()!=0){
                 for(int i=0;i<s;i++){
-                    if(!(banned.contains(i)))
+                    if(!(banned.contains(i)) && usedList.size()!=0)
                         groups.get(i).addToGroup(usedList.pop(),graph);
                     if(hasManyEnemies(groups.get(i),p)){
                         banned.add(i);

@@ -221,8 +221,10 @@ public class GraphDemoFrame extends JFrame {
                 Graph enemyGraph = GraphUtils.fromStr(textAreaEnemyGraph.getText(), clz);
                 GraphDemoFrame.this.friendlyGraph = friendlyGraph;
                 GraphDemoFrame.this.enemyGraph = enemyGraph;
-                friednlyPanelGraphPainter.paint(dotToSvg(friendlyGraph.toDot()));
-                enemyPanelGraphPainter.paint(dotToSvg(enemyGraph.toDot()));
+                friednlyPanelGraphPainter.paint(dotToSvg(friendlyGraph.toDotWithEnemies(enemyGraph)));
+
+            //    friednlyPanelGraphPainter.paint(dotToSvg(friendlyGraph.toDot()));
+         //       enemyPanelGraphPainter.paint(dotToSvg(enemyGraph.toDot()));
             } catch (Exception exc) {
                 SwingUtils.showErrorMessageBox(exc);
             }
@@ -417,8 +419,10 @@ public class GraphDemoFrame extends JFrame {
                     int groupCount = Integer.parseInt(groupCountTextField.getText());
                     int enemyCount = Integer.parseInt(enemyCountTextField.getText());
                     ArrayList<Group> groups = Solution.groupingUsers(enemyGraph, groupCount, enemyCount);
-                    if(groups.size()!=0) {
-                        solutionPanelGraphPainter.paint(Graph.toDotFromGroups(groups));
+                    if (groups.size() != 0) {
+                     //   solutionPanelGraphPainter.paint(dotToSvg(Graph.toDotFromGroups(groups)));
+                        enemyPanelGraphPainter.paint(dotToSvg(Graph.toDotFromGroups(groups)));
+
                     }
                     System.out.println("done");
                 } catch (Exception ex) {
@@ -578,7 +582,7 @@ public class GraphDemoFrame extends JFrame {
         peopleWithBookInput = new JTextField();
         panel4.add(peopleWithBookInput, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         textAreaEnemyGraph = new JTextArea();
-        textAreaEnemyGraph.setText("6\n10\n0 1\n0 3\n0 2\n1 2\n1 4\n2 5\n5 4\n3 4\n4 1\n3 5");
+        textAreaEnemyGraph.setText("6\n5\n0 5\n0 4\n5 1\n3 2\n1 3");
         panel1.add(textAreaEnemyGraph, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
         final JLabel label3 = new JLabel();
         label3.setText("Граф врагов");

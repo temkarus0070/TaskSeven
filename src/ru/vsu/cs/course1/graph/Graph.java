@@ -89,7 +89,7 @@ public interface Graph {
      */
     default void dfsStackImpl(int from, Consumer<Integer> visitor) {
         boolean[] visited = new boolean[vertexCount()];
-        Stack<Integer> stack = new Stack<Integer>();
+        Stack<Integer> stack = new Stack<>();
         stack.push(from);
         visited[from] = true;
         while (!stack.empty()) {
@@ -112,7 +112,7 @@ public interface Graph {
      */
     default void bfsQueueImpl(int from, Consumer<Integer> visitor) {
         boolean[] visited = new boolean[vertexCount()];
-        Queue<Integer> queue = new LinkedList<Integer>();
+        Queue<Integer> queue = new LinkedList<>();
         queue.add(from);
         visited[from] = true;
         while (queue.size() > 0) {
@@ -231,6 +231,43 @@ public interface Graph {
         }
         sb.append("}").append(nl);
 
+        System.out.println(sb.toString());
+        return sb.toString();
+    }
+
+
+    default String toDotWithEnemies(Graph enemies) {
+        StringBuilder sb = new StringBuilder();
+        String nl = System.getProperty("line.separator");
+        boolean isDigraph = this instanceof Digraph;
+        sb.append(isDigraph ? "digraph" : "strict graph").append(" {").append(nl);
+        for (int v1 = 0; v1 < vertexCount(); v1++) {
+            int count = 0;
+            for (Integer v2 : this.adjacencies(v1)) {
+                sb.append(String.format("  %d %s %d", v1, (isDigraph ? "->" : "--"), v2)).append(nl);
+                count++;
+            }
+            if (count == 0) {
+                sb.append(v1).append(nl);
+            }
+        }
+
+        for (int v1 = 0; v1 < enemies.vertexCount(); v1++) {
+            int count = 0;
+            for (Integer v2 : enemies.adjacencies(v1)) {
+                sb.append(String.format("  %d %s %d[color=red]", v1, (isDigraph ? "->" : "--"), v2)).append(nl);
+                count++;
+            }
+            if (count == 0) {
+                sb.append(v1).append(nl);
+            }
+        }
+
+
+
+        sb.append("}").append(nl);
+
+        System.out.println(sb.toString());
         return sb.toString();
     }
 
@@ -265,20 +302,20 @@ public interface Graph {
         boolean isDigraph = false;
         sb.append(isDigraph ? "digraph" : "strict graph").append(" {").append(nl);
         for(int i=0;i<groups.size();i++){
-
-        }
-
-        for (int v1 = 0; v1 < vertexCount(); v1++) {
-            int count = 0;
-            for (Integer v2 : this.adjacencies(v1)) {
-                sb.append(String.format("  %d %s %d", v1, (isDigraph ? "->" : "--"), v2)).append(nl);
-                count++;
+            Group group = groups.get(i);
+            int first = group.users.get(0);
+            for(int j=1;j<group.users.size();j++) {
+                int element = group.users.get(j);
+                sb.append(String.format("  %d %s %d[color=%s]", first, (isDigraph ? "->" : "--"), element, Colors.colors[i])).append(nl);
+              //  sb.append(String.format("  %d %s %d", first, (isDigraph ? "->" : "--"), element)).append(nl);
+              //  sb.append(String.format("  %d %s %d", element, (isDigraph ? "->" : "--"), first)).append(nl);
             }
-            if (count == 0) {
-                sb.append(v1).append(nl);
-            }
+            if(group.users.size()==1)
+                sb.append(first).append(nl);
+
         }
         sb.append("}").append(nl);
+        System.out.println(sb.toString());
 
         return sb.toString();
     }
