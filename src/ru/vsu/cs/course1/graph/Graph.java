@@ -1,9 +1,7 @@
 package ru.vsu.cs.course1.graph;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
+import java.awt.*;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import javax.management.Query;
@@ -213,11 +211,63 @@ public interface Graph {
      * Получение dot-описяния графа (для GraphViz)
      * @return
      */
+
+
+
     default String toDot() {
         StringBuilder sb = new StringBuilder();
         String nl = System.getProperty("line.separator");
         boolean isDigraph = this instanceof Digraph;
         sb.append(isDigraph ? "digraph" : "strict graph").append(" {").append(nl);
+        for (int v1 = 0; v1 < vertexCount(); v1++) {
+            int count = 0;
+            for (Integer v2 : this.adjacencies(v1)) {
+                sb.append(String.format("  %d %s %d", v1, (isDigraph ? "->" : "--"), v2)).append(nl);
+                count++;
+            }
+            if (count == 0) {
+                sb.append(v1).append(nl);
+            }
+        }
+        sb.append("}").append(nl);
+
+        return sb.toString();
+    }
+
+
+    default String toDotWithPath( HashMap<Edge,Byte> edgeHashMap) {
+        StringBuilder sb = new StringBuilder();
+        String nl = System.getProperty("line.separator");
+        boolean isDigraph = this instanceof Digraph;
+        sb.append(isDigraph ? "digraph" : "strict graph").append(" {").append(nl);
+        for (int v1 = 0; v1 < vertexCount(); v1++) {
+            int count = 0;
+            for (Integer v2 : this.adjacencies(v1)) {
+                if(edgeHashMap.get(new Edge(v1,v2))!=null)
+                    sb.append(String.format("  %d %s %d[style=dotted]", v1, (isDigraph ? "->" : "--"), v2)).append(nl);
+                else
+                    sb.append(String.format("  %d %s %d", v1, (isDigraph ? "->" : "--"), v2)).append(nl);
+                count++;
+            }
+            if (count == 0) {
+                sb.append(v1).append(nl);
+            }
+        }
+        sb.append("}").append(nl);
+
+        return sb.toString();
+    }
+
+
+    public static String toDotFromGroups( ArrayList<Group> groups) {
+        StringBuilder sb = new StringBuilder();
+        String nl = System.getProperty("line.separator");
+        boolean isDigraph = false;
+        sb.append(isDigraph ? "digraph" : "strict graph").append(" {").append(nl);
+        for(int i=0;i<groups.size();i++){
+
+        }
+
         for (int v1 = 0; v1 < vertexCount(); v1++) {
             int count = 0;
             for (Integer v2 : this.adjacencies(v1)) {
