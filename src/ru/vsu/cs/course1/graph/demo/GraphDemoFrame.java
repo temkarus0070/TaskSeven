@@ -16,7 +16,8 @@ import ru.vsu.cs.course1.graph.*;
 import ru.vsu.cs.util.SwingUtils;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -64,6 +65,10 @@ public class GraphDemoFrame extends JFrame {
     private JTextField vertexCountField;
     private JTextField maxEnemyCountsField;
     private JPanel GraphPaintingPanel;
+    private JSlider multiplySlider;
+    private JSlider multiplyGroupsSlider;
+    private int currentFriednlyMultiply = 1;
+    private int currentEnemiesMultiply = 1;
 
     private JFileChooser fileChooserTxtOpen;
     private JFileChooser fileChooserDotOpen;
@@ -343,10 +348,66 @@ public class GraphDemoFrame extends JFrame {
                     GraphDemoFrame.this.enemyGraph = enemyGraph;
                     friednlyPanelGraphPainter.paint(dotToSvg(friendlyGraph.toDotWithEnemies(enemyGraph)));
 
-
                     System.out.println("kek");
                 } catch (Exception exception) {
 
+                }
+            }
+        });
+        multiplySlider.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                int multiply = multiplySlider.getValue();
+                if (multiply > currentFriednlyMultiply) {
+                    Dimension current = friednlyPanelGraphPainter.getSize();
+                    current.height *= multiply;
+                    current.width *= multiply;
+                    friednlyPanelGraphPainter.setMinimumSize(current);
+                    friednlyPanelGraphPainter.setPreferredSize(current);
+                    friednlyPanelGraphPainter.setMaximumSize(current);
+                    friednlyPanelGraphPainter.resize(current);
+                    currentFriednlyMultiply = multiply;
+                }
+                if (multiply < currentFriednlyMultiply) {
+                    Dimension current = friednlyPanelGraphPainter.getSize();
+                    current.height /= currentFriednlyMultiply;
+                    current.width /= currentFriednlyMultiply;
+                    current.height *= multiply;
+                    current.width *= multiply;
+                    friednlyPanelGraphPainter.setMinimumSize(current);
+                    friednlyPanelGraphPainter.setPreferredSize(current);
+                    friednlyPanelGraphPainter.setMaximumSize(current);
+                    friednlyPanelGraphPainter.resize(current);
+                    currentFriednlyMultiply = multiply;
+                }
+
+            }
+        });
+        multiplyGroupsSlider.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                int multiply = multiplyGroupsSlider.getValue();
+                if (multiply > currentEnemiesMultiply) {
+                    Dimension current = enemyPanelGraphPainter.getSize();
+                    current.height *= multiply;
+                    current.width *= multiply;
+                    enemyPanelGraphPainter.setMinimumSize(current);
+                    enemyPanelGraphPainter.setPreferredSize(current);
+                    enemyPanelGraphPainter.setMaximumSize(current);
+                    enemyPanelGraphPainter.resize(current);
+                    currentEnemiesMultiply = multiply;
+                }
+                if (multiply < currentEnemiesMultiply) {
+                    Dimension current = enemyPanelGraphPainter.getSize();
+                    current.height /= currentEnemiesMultiply;
+                    current.width /= currentFriednlyMultiply;
+                    current.height *= multiply;
+                    current.width *= multiply;
+                    enemyPanelGraphPainter.setMinimumSize(current);
+                    enemyPanelGraphPainter.setPreferredSize(current);
+                    enemyPanelGraphPainter.setMaximumSize(current);
+                    enemyPanelGraphPainter.resize(current);
+                    currentEnemiesMultiply = multiply;
                 }
             }
         });
@@ -497,27 +558,57 @@ public class GraphDemoFrame extends JFrame {
         final JScrollPane scrollPane3 = new JScrollPane();
         GraphPaintingPanel.add(scrollPane3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final JPanel panel4 = new JPanel();
-        panel4.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
+        panel4.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         scrollPane3.setViewportView(panel4);
+        final JSplitPane splitPane1 = new JSplitPane();
+        splitPane1.setOrientation(0);
+        panel4.add(splitPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
         final JPanel panel5 = new JPanel();
-        panel5.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
-        panel4.add(panel5, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        panelGraphPainterContainer = new JPanel();
-        panelGraphPainterContainer.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        panel5.add(panelGraphPainterContainer, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panel5.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
+        splitPane1.setLeftComponent(panel5);
         final JLabel label8 = new JLabel();
         label8.setText("Граф врагов и друзей");
         label8.setVerticalAlignment(0);
-        panel5.add(label8, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel5.add(label8, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JScrollPane scrollPane4 = new JScrollPane();
+        panel5.add(scrollPane4, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        panelGraphPainterContainer = new JPanel();
+        panelGraphPainterContainer.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        scrollPane4.setViewportView(panelGraphPainterContainer);
+        multiplySlider = new JSlider();
+        multiplySlider.setInverted(false);
+        multiplySlider.setMajorTickSpacing(5);
+        multiplySlider.setMinimum(1);
+        multiplySlider.setMinorTickSpacing(1);
+        multiplySlider.setPaintLabels(true);
+        multiplySlider.setPaintTicks(true);
+        multiplySlider.setPaintTrack(true);
+        multiplySlider.setSnapToTicks(true);
+        multiplySlider.setToolTipText("");
+        multiplySlider.setValue(1);
+        multiplySlider.setValueIsAdjusting(true);
+        panel5.add(multiplySlider, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel6 = new JPanel();
-        panel6.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
-        panel4.add(panel6, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        panelEnemyGraphContainer = new JPanel();
-        panelEnemyGraphContainer.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        panel6.add(panelEnemyGraphContainer, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panel6.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
+        splitPane1.setRightComponent(panel6);
         final JLabel label9 = new JLabel();
         label9.setText("Граф с группами");
-        panel6.add(label9, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel6.add(label9, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JScrollPane scrollPane5 = new JScrollPane();
+        panel6.add(scrollPane5, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        panelEnemyGraphContainer = new JPanel();
+        panelEnemyGraphContainer.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        scrollPane5.setViewportView(panelEnemyGraphContainer);
+        multiplyGroupsSlider = new JSlider();
+        multiplyGroupsSlider.setMajorTickSpacing(5);
+        multiplyGroupsSlider.setMinimum(1);
+        multiplyGroupsSlider.setMinorTickSpacing(1);
+        multiplyGroupsSlider.setPaintLabels(true);
+        multiplyGroupsSlider.setPaintTicks(true);
+        multiplyGroupsSlider.setSnapToTicks(true);
+        multiplyGroupsSlider.setValue(1);
+        multiplyGroupsSlider.setValueIsAdjusting(false);
+        panel6.add(multiplyGroupsSlider, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         panelGraphvizTab = new JPanel();
         panelGraphvizTab.setLayout(new GridLayoutManager(1, 1, new Insets(10, 10, 10, 10), 10, 10));
         tabbedPaneMain.addTab("Graphviz", null, panelGraphvizTab, "Демонстрация возможностей GraphViz");
@@ -538,11 +629,11 @@ public class GraphDemoFrame extends JFrame {
         final JPanel panel8 = new JPanel();
         panel8.setLayout(new GridLayoutManager(4, 1, new Insets(0, 0, 0, 0), -1, -1));
         splitPaneGraphvizTab1.setLeftComponent(panel8);
-        final JScrollPane scrollPane4 = new JScrollPane();
-        panel8.add(scrollPane4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final JScrollPane scrollPane6 = new JScrollPane();
+        panel8.add(scrollPane6, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         textAreaDotFile = new JTextArea();
         textAreaDotFile.setText("graph {\n    2 -- { 3 -- 4 }\n    3 -- 6 -- { 2 4 }\n    7 -- 8 -- 7\n    9\n}\n");
-        scrollPane4.setViewportView(textAreaDotFile);
+        scrollPane6.setViewportView(textAreaDotFile);
         final JPanel panel9 = new JPanel();
         panel9.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
         panel8.add(panel9, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));

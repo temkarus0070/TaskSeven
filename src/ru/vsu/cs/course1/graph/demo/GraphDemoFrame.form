@@ -287,67 +287,127 @@
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <grid id="1aa4d" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                      <grid id="1aa4d" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                         <margin top="0" left="0" bottom="0" right="0"/>
                         <constraints/>
                         <properties/>
                         <border type="none"/>
                         <children>
-                          <grid id="c3a23" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                            <margin top="0" left="0" bottom="0" right="0"/>
+                          <splitpane id="47a9f">
                             <constraints>
-                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                                <preferred-size width="200" height="200"/>
+                              </grid>
                             </constraints>
-                            <properties/>
+                            <properties>
+                              <orientation value="0"/>
+                            </properties>
                             <border type="none"/>
                             <children>
-                              <grid id="645cb" binding="panelGraphPainterContainer" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                              <grid id="c3a23" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                                 <margin top="0" left="0" bottom="0" right="0"/>
                                 <constraints>
-                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                  <splitpane position="left"/>
                                 </constraints>
                                 <properties/>
                                 <border type="none"/>
-                                <children/>
+                                <children>
+                                  <component id="db423" class="javax.swing.JLabel">
+                                    <constraints>
+                                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                    </constraints>
+                                    <properties>
+                                      <text value="Граф врагов и друзей"/>
+                                      <verticalAlignment value="0"/>
+                                    </properties>
+                                  </component>
+                                  <scrollpane id="9f523">
+                                    <constraints>
+                                      <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                    </constraints>
+                                    <properties/>
+                                    <border type="none"/>
+                                    <children>
+                                      <grid id="645cb" binding="panelGraphPainterContainer" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                                        <margin top="0" left="0" bottom="0" right="0"/>
+                                        <constraints/>
+                                        <properties/>
+                                        <border type="none"/>
+                                        <children/>
+                                      </grid>
+                                    </children>
+                                  </scrollpane>
+                                  <component id="a94b3" class="javax.swing.JSlider" binding="multiplySlider">
+                                    <constraints>
+                                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                                    </constraints>
+                                    <properties>
+                                      <inverted value="false"/>
+                                      <majorTickSpacing value="5"/>
+                                      <minimum value="1"/>
+                                      <minorTickSpacing value="1"/>
+                                      <paintLabels value="true"/>
+                                      <paintTicks value="true"/>
+                                      <paintTrack value="true"/>
+                                      <snapToTicks value="true"/>
+                                      <toolTipText value=""/>
+                                      <value value="1"/>
+                                      <valueIsAdjusting value="true"/>
+                                    </properties>
+                                  </component>
+                                </children>
                               </grid>
-                              <component id="db423" class="javax.swing.JLabel">
-                                <constraints>
-                                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                                </constraints>
-                                <properties>
-                                  <text value="Граф врагов и друзей"/>
-                                  <verticalAlignment value="0"/>
-                                </properties>
-                              </component>
-                            </children>
-                          </grid>
-                          <grid id="2bc3a" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                            <margin top="0" left="0" bottom="0" right="0"/>
-                            <constraints>
-                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties/>
-                            <border type="none"/>
-                            <children>
-                              <grid id="3232e" binding="panelEnemyGraphContainer" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                              <grid id="2bc3a" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                                 <margin top="0" left="0" bottom="0" right="0"/>
                                 <constraints>
-                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                  <splitpane position="right"/>
                                 </constraints>
                                 <properties/>
                                 <border type="none"/>
-                                <children/>
+                                <children>
+                                  <component id="edb09" class="javax.swing.JLabel">
+                                    <constraints>
+                                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                    </constraints>
+                                    <properties>
+                                      <text value="Граф с группами"/>
+                                    </properties>
+                                  </component>
+                                  <scrollpane id="db45">
+                                    <constraints>
+                                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                    </constraints>
+                                    <properties/>
+                                    <border type="none"/>
+                                    <children>
+                                      <grid id="3232e" binding="panelEnemyGraphContainer" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                                        <margin top="0" left="0" bottom="0" right="0"/>
+                                        <constraints/>
+                                        <properties/>
+                                        <border type="none"/>
+                                        <children/>
+                                      </grid>
+                                    </children>
+                                  </scrollpane>
+                                  <component id="3c2f5" class="javax.swing.JSlider" binding="multiplyGroupsSlider">
+                                    <constraints>
+                                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                                    </constraints>
+                                    <properties>
+                                      <majorTickSpacing value="5"/>
+                                      <minimum value="1"/>
+                                      <minorTickSpacing value="1"/>
+                                      <paintLabels value="true"/>
+                                      <paintTicks value="true"/>
+                                      <snapToTicks value="true"/>
+                                      <value value="1"/>
+                                      <valueIsAdjusting value="false"/>
+                                    </properties>
+                                  </component>
+                                </children>
                               </grid>
-                              <component id="edb09" class="javax.swing.JLabel">
-                                <constraints>
-                                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                                </constraints>
-                                <properties>
-                                  <text value="Граф с группами"/>
-                                </properties>
-                              </component>
                             </children>
-                          </grid>
+                          </splitpane>
                         </children>
                       </grid>
                     </children>
