@@ -37,6 +37,18 @@ public class Group {
         return maxEnemies;
     }
 
+    public boolean canAdd(int user,Graph graph,int p){
+        for(Iterator<Integer> iterator = usersWithEnemiesCountMap.keySet().iterator();iterator.hasNext();){
+            int u = iterator.next();
+            if(graph.isAdj(user,u)) {
+                int count = usersWithEnemiesCountMap.get(u);
+                if((count + 1)>p)
+                    return false;
+            }
+        }
+        return true;
+    }
+
 
 
 

@@ -168,40 +168,7 @@ public class Solution {
         return false;
     }
 
-    public static Graph groupingWithEnemy(Graph enemyGraph, int s, int p) {
-        Graph newGraph = new AdjMatrixGraph();
-        Graph copyGraph = copyGraph(enemyGraph);
-        ArrayList<Integer> list = new ArrayList<>();
-        int[] enemyCount = new int[enemyGraph.vertexCount()];
-        HashMap<Integer, ArrayList<Integer>> vertex = new HashMap<>();
-        for (int i = 0; i < enemyGraph.vertexCount(); i++) {
-            list.add(i);
-        }
 
-
-        for (int i = 0; i < s; i++) {
-            vertex.put(i, new ArrayList<>());
-            list.remove(i);
-        }
-        while (list.size() > 0) {
-            for (Integer element : list) {
-                for (Iterator<Integer> iterator = vertex.keySet().iterator(); iterator.hasNext(); ) {
-                    int u = iterator.next();
-
-                    if (checkOneEnemy(enemyGraph, element, p, u, enemyCount)) {
-                        ArrayList<Integer> listVertex = vertex.get(u);
-                        listVertex.add(element);
-                        list.remove(element);
-                        continue;
-
-                    }
-
-
-                }
-            }
-        }
-        return null;
-    }
 
     public static ArrayList<Group> groupingUsers(Graph graph,int s,int p){
         ArrayList<Group> groups;
@@ -227,10 +194,21 @@ public class Solution {
             LinkedList<Integer> usedList = (LinkedList<Integer>) linkedList.clone();
             while (banned.size()!=s && usedList.size()!=0){
                 for(int i=0;i<s;i++){
-                    if(!(banned.contains(i)) && usedList.size()!=0)
-                        groups.get(i).addToGroup(usedList.pop(),graph);
+                    boolean thisBanned = true;
+                    if(!(banned.contains(i)) && usedList.size()!=0 && p!=0) {
+                        thisBanned=false;
+                        groups.get(i).addToGroup(usedList.pop(), graph);
+                    }
+
                     if(hasManyEnemies(groups.get(i),p)){
                         banned.add(i);
+                    }
+                    if(!thisBanned  && usedList.size()!=0){
+                        int user = usedList.pop();
+                        if(groups.get(i).canAdd(user,graph,p)){
+                            groups.get(i).addToGroup(user,graph);
+                        }
+                        else usedList.add(user);
                     }
                 }
             }
@@ -292,6 +270,78 @@ public class Solution {
             }
         }
         return newGraph;
+    }
+
+
+    public static Graph[] generator(int n,int k){
+        Graph[] graphs = new Graph[2];
+        Graph friendlyGraph = new AdjMatrixGraph();
+        Graph enemyGraph = new AdjMatrixGraph();
+        HashMap<Integer,Integer> enemiesCountMap = new HashMap<>();
+        List<int[]> sets = new ArrayList<>();
+        for(int i=0;i<n;i += 2){
+            int[] array = new int[2];
+            for(int j=0;j<2;j++){
+                enemiesCountMap.put(i,0);
+                enemiesCountMap.put(i+1,0);
+
+                array[0] = i;
+                array[1] = i+1;
+            }
+            sets.add(array);
+        }
+
+        for(int i=0;i<n/2;i++){
+            int plus = 2;
+            int[] array  =  sets.get(i);
+            int one = array[0];
+            int two = array[1];
+            friendlyGraph.addAdge(one,two);
+            while( i + plus <(n/2)) {
+                int[] secondArray  = sets.get(i + plus);
+                for(int j=0;j<2;j++){
+                    friendlyGraph.addAdge(secondArray[j],array[j]);
+                }
+                plus++;
+            }
+
+        }
+
+        for(int i=0;i<n/2-1;i++){
+            int[] oneArray = sets.get(i);
+            int[] twoArray = sets.get(i+1);
+            for(int j=0;j<2;j++){
+                friendlyGraph.addAdge(oneArray[j],twoArray[j]);
+            }
+        }
+
+
+
+
+        graphs[0] = friendlyGraph;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                if(i!=j && !friendlyGraph.isAdj(i,j) ){
+                    int enemiesToFirst = enemiesCountMap.get(i);
+                    int enemiesToSecond = enemiesCountMap.get(j);
+
+                    if(enemiesToFirst + 1 <= k && enemiesToSecond + 1 <= k) {
+                        enemyGraph.addAdge(i, j);
+                        enemiesCountMap.put(i,enemiesToFirst+1);
+                        enemiesCountMap.put(j,enemiesToSecond+1);
+                    }
+
+                }
+            }
+        }
+        graphs[1] = enemyGraph;
+
+
+
+
+
+        return graphs;
+        
     }
 
 
